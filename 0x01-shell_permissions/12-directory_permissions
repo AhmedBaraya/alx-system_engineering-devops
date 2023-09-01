@@ -1,3 +1,18 @@
 #!/bin/bash
-mkdir -m 751 my_dir 
+
+dir="my_dir"
+
+# Check if the directory already exists
+if [ -d "$dir" ]; then
+    echo "Directory '$dir' already exists."
+else
+    # Create the directory with permissions 751
+    mkdir -m 751 "$dir"
+    
+    if [ $? -eq 0 ]; then
+        echo "Directory '$dir' created successfully."
+    else
+        echo "Failed to create directory '$dir'."
+    fi
+fi
 
