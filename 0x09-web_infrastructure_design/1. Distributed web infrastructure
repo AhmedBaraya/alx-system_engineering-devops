@@ -1,0 +1,55 @@
+## Flowchart: Distributed Web Infrastructure with Security and Monitoring (www.foobar.com [invalid URL removed])
+
+**Start**
+
+**Client-Side (Multiple Clients):**
+
+* Client 1 sends an HTTP request.
+* (Optional) More clients (Client 2, Client N) send HTTP requests.
+
+**Internet:**
+
+* HTTP requests travel through the internet.
+
+**Load Balancer (HAproxy):**
+
+* Receives HTTP requests from clients.
+* (Step related to 2 above) Distributes traffic evenly using a Round Robin algorithm (or other configured method).
+* Sends requests to available web servers.
+
+**Web Servers (Nginx - x2):**
+
+* (Step related to 3 above) Receives a request from the load balancer.
+* Retrieves content from the application server.
+* Delivers web pages to clients.
+
+**Application Servers (on Servers 1 & 2):**
+
+* (Step related to 4 above) Processes the request using the application codebase.
+* Interacts with the database for data retrieval (reads) or updates (writes).
+
+**Database (MySQL):**
+
+* (Step related to application server actions)
+    * For reads: Provides data to the application server from the Replica node (if configured).
+    * For writes: Receives updates from the application server and stores them on the Master node.
+
+**Response to Client:**
+
+* Web server delivers the generated web page to the client that initiated the request.
+
+**Security Considerations (Optional):**
+
+* Firewall (not currently implemented): Filters incoming and outgoing traffic to block potential attacks.
+* HTTPS (not currently implemented): Encrypts communication between clients and servers for secure data transmission.
+
+**Monitoring Considerations (Optional):**
+
+* Monitoring tools (not currently implemented): Track server health, application performance, and potential issues.
+
+**End**
+
+**Notes:**
+
+* This flowchart highlights the core process flow and includes optional security and monitoring considerations.
+* Steps related to each other (client requests, load balancer distribution, web server reception) are placed side-by-side to show their concurrent nature.
