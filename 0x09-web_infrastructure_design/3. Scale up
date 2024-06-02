@@ -1,0 +1,63 @@
+## Scaled-Up and Secure Web Infrastructure (www.foobar.com 
+
+**Start**
+
+**Client-Side (Multiple Clients):**
+
+* Client 1 sends an HTTPS request.
+* (Optional) More clients (Client 2, Client 3, etc.) send HTTPS requests.
+
+**Internet:**
+
+* HTTPS requests travel through the internet.
+
+**Firewall (Web):**
+
+* Filters incoming traffic to web servers, blocking malicious requests.
+
+**Load Balancers (HAproxy Cluster):**
+
+* (Step related to Firewall) Receives filtered traffic from the web firewall.
+* (Redundancy) Operates in a cluster configuration for fault tolerance.
+* Distributes HTTPS requests across available web servers using a Round Robin algorithm (or other configured method).
+
+**Web Servers (Nginx - x2):**
+
+* (Step related to Load Balancers) Receives a request from a load balancer.
+* Retrieves content from the application server.
+* Delivers web pages to clients.
+
+**Application Servers (x2):**
+
+* (Step related to Web Servers) Processes the request using the application codebase.
+* Interacts with the database for data retrieval (reads) or updates (writes).
+
+**Database Server (MySQL):**
+
+* (Step related to application server actions)
+    * For reads: Provides data to the application server.
+    * For writes: Receives updates from the application server and stores them.
+
+**Response to Client:**
+
+* Web server delivers the generated web page to the client that initiated the request.
+
+**Monitoring Clients (x4):**
+
+* Continuously collect performance data from all servers and load balancers.
+* Send collected data to a monitoring service (e.g., Sumo Logic) for analysis.
+
+**End**
+
+**Notes:**
+
+* This flowchart highlights the core process flow, including security (firewalls) and monitoring aspects.
+* Steps related to each other (client requests, web firewall filtering, load balancer distribution, web server reception) are placed side-by-side to show their concurrent nature.
+* Redundancy in the load balancer cluster is emphasized.
+
+**Additional Considerations:**
+
+* A database cluster with multiple master nodes can be implemented for write redundancy.
+* Additional security measures like application firewalls can be added.
+
+
