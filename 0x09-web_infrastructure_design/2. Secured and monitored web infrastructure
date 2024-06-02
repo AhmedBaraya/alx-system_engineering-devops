@@ -1,0 +1,71 @@
+## Secured and Monitored Three-Server Web Infrastructure for www.foobar.com (Whiteboard Design)
+
+**Network Diagram:**
+
+```
+                                        +-----------------+
+                                        |     Internet     |
+                                        +-----------------+
+                                                 |
+                                                 | (HTTPS Requests)
+                                                 |
+                                           +---------+         +---------+         +---------+
+                                           | Firewall |         | HAproxy |         | Firewall |
+                                           | (Web)    |         | (LB)     |         | (App)    |
+                                           +---------+         +---------+         +---------+
+                                                 |
+                                                 |
+                                           +---------+         +---------+         +---------+
+                                           |  Server  |         |  Server  |         | Database |
+                                           |  1       |         |  2       |         | (MySQL)  |
+                                           +---------+         +---------+         +---------+
+                                                 |
+                                                 |
+                                           +---------+         +---------+
+                                           | Monitoring |         | Monitoring |
+                                           | Client 1  |         | Client 2  |
+                                           | (Sumo Logic) |         | (Sumo Logic) |
+                                           +---------+         +---------+
+                                                 |
+                                                 |
+                                           +---------+
+                                           | Monitoring |
+                                           | Client 3  |
+                                           | (Sumo Logic) |
+                                           +---------+
+
+**Components:**
+
+1. **Internet:** Represents the global network that allows communication between clients and servers.
+2. **Clients (Multiple):** Users accessing the website www.foobar.com [invalid URL removed].
+3. **Firewalls (x3):**
+    * Web Firewall: Filters incoming traffic to the web servers, blocking malicious requests and protecting against web attacks.
+    * Load Balancer Firewall: Filters traffic going to the load balancer.
+    * Application Firewall (Optional): Filters traffic going to the application server, providing additional security.
+4. **SSL Certificate:** Enables HTTPS encryption for secure communication between clients and the load balancer.
+5. **HAproxy (Load Balancer):** Distributes incoming HTTPS requests from clients across multiple web servers for improved performance and scalability.
+6. **Web Servers (Nginx - x2):** Receive requests from the load balancer, retrieve content from the application server, and deliver web pages to clients.
+7. **Servers (x2):** Host the web server (Nginx) and application server software.
+8. **Application Server Software (on Servers 1 & 2):** Executes the website's code (your codebase) to generate dynamic content based on user requests.
+9. **Database (MySQL):** Stores the website's data.
+10. **Monitoring Clients (x3):** Installed on each server and the load balancer, collecting performance data and sending it to a monitoring service like Sumo Logic.
+
+**Explanation:**
+
+* **HTTPS with SSL:** The website uses HTTPS with an SSL certificate to encrypt communication between clients and the load balancer. This protects data from being intercepted during transmission. 
+* **Firewalls:** Firewalls act as security barriers, filtering incoming and outgoing traffic based on predefined rules. They help block malicious attacks and unauthorized access.
+* **Monitoring:** Monitoring tools collect data on server performance, application health, and resource utilization. This allows proactive identification of potential issues and ensures optimal website operation. Monitoring clients on each server and the load balancer gather data, which is then sent to a centralized service like Sumo Logic for analysis and visualization.
+
+**Monitoring Web Server QPS (Queries Per Second):** 
+
+Sumo Logic or other monitoring services can be configured to collect metrics related to web server performance, including QPS. This can be achieved by installing monitoring agents on the web servers that track incoming requests and calculate the QPS. The collected data can then be visualized in dashboards to monitor traffic patterns and identify potential bottlenecks.
+
+**Issues with this Infrastructure:**
+
+* **SSL Termination at Load Balancer:** While terminating SSL at the load balancer offers some security benefits, it can limit visibility into individual server health and prevent advanced security features offered by certificates on each web server.
+* **Single MySQL Write Server:** A single MySQL server creates a single point of failure (SPOF) for write operations. If this server fails, the website will be unable to accept new data (e.g., user registrations).
+* **Homogeneous Servers:**  Having all servers with the same components (database, web server, and application server) can be inefficient. It might be more efficient to dedicate one server for the database and separate servers for web and application servers to optimize resource allocation.
+
+**Improvements:**
+
+* Implement a High Availability (HA) solution for the database cluster with multiple master nodes for write redundancy
