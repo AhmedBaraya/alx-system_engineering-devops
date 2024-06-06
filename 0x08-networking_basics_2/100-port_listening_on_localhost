@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Ensure the script is run with root privileges
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run the script as root or using sudo."
+  exit 1
+fi
+
+# Use netcat to listen on port 98 on localhost
+nc -lk 127.0.0.1 98
